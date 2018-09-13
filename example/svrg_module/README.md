@@ -31,3 +31,11 @@ thus SGD needs to start with a small learning rate. The learning rate does not n
 therefore we can use a relatively larger learning rate. SGD with learning rate of (0.001, 0.0025) and SVRG with 
 learning rate of (0.025) are benchmarked. Even though SVRG starts with a relatively large learning rate, it converges 
 much faster than SGD in both cases.  
+
+Another example notebook builds a multi-class logistic regression with L2 regularization 1e-4 and a MLP neural network 
+with one hidden layer of 100 nodes and 10 softmax output nodes using sigmoid activation and L2 regularization 1e-4.
+
+* benchmark1: Convex optimization multi-class logistic regression with SVRG learning rate 0.025, SGD learning rate 
+0.005, 0.0025 and 0.001 respectively.  
+
+* benchmark2: Non-convex MLP training loss over 10 epochs.

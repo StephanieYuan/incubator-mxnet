@@ -37,9 +37,9 @@ ctx = mx.cpu() if args.gpus is None or args.gpus == "" else [mx.gpu(int(i)) for 
 logger = create_logger()
 kv = mx.kvstore.create(args.kv_store)
 
-feature_dim, train_features, train_labels = read_year_prediction_data('YearPredictionMSD')
-train_iter, mod = create_lin_reg_network(train_features, train_labels, feature_dim, args.batch_size, args.updateFreq,
-                                         ctx, logger)
+feature_dim, train_features, train_labels, val_features, val_labels = read_year_prediction_data('YearPredictionMSD')
+train_iter, val_iter, mod = create_lin_reg_network(train_features, train_labels, val_features, val_labels, feature_dim,
+                                                   args.batch_size, args.updateFreq, ctx, logger)
 
-mod.fit(train_iter, eval_metric='mse', optimizer='sgd',
+mod.fit(train_iter, eval_metric='mse', optimizer='sgd', eval_data=val_iter, validation_metric='mse',
         optimizer_params=(('learning_rate', 0.025), ), num_epoch=args.epochs, kvstore=kv)

@@ -355,7 +355,7 @@ class SVRGModule(Module):
             A list of average of the full gradients in the KVStore.
         """
         for i in range(self._ctx_len):
-            self._param_dict[i][key] = value[i] / self._ctx_len
+            self._param_dict[i][key] = value[i] / (self._ctx_len * self._kvstore.num_workers)
 
     def _svrg_grads_update_rule(self, g_curr_batch_curr_weight, g_curr_batch_special_weight,
                                 g_special_weight_all_batch):

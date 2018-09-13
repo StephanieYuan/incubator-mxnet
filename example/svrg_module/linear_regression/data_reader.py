@@ -41,5 +41,8 @@ def read_year_prediction_data(fileName):
     train_features = (train_features - feature_means) / feature_stds
     train_labels = (train_labels - label_mean) / label_std
 
-    return feature_dim, train_features, train_labels
+    val_features = train_features[10000:12500, :]
+    val_labels = train_labels[10000:12500]
+
+    return feature_dim, train_features[:10000, :], train_labels[:10000], val_features, val_labels
 

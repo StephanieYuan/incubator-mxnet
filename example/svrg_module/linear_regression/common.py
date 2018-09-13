@@ -21,11 +21,12 @@ import logging
 from mxnet.contrib.svrg_optimization.svrg_module import SVRGModule
 
 
-def create_lin_reg_network(train_features, train_labels, feature_dim, batch_size, update_freq, ctx, logger):
+def create_lin_reg_network(train_features, train_labels, val_features, val_labels, feature_dim, batch_size, update_freq, ctx, logger):
     # fit a linear regression model with mxnet SVRGModule
     print("Fitting linear regression with mxnet")
     train_iter = mx.io.NDArrayIter(train_features, train_labels, batch_size=batch_size, shuffle=True,
                                    data_name='data', label_name='label')
+    val_iter = mx.io.NDArrayIter(val_features, val_labels, batch_size=batch_size)
     data = mx.sym.Variable("data")
     label = mx.sym.Variable("label")
     weight = mx.sym.Variable("fc_weight", shape=(1, feature_dim))
@@ -35,7 +36,7 @@ def create_lin_reg_network(train_features, train_labels, feature_dim, batch_size
     net = mx.sym.LinearRegressionOutput(data=net, label=label)
     mod = SVRGModule(symbol=net, context=ctx, data_names=['data'], label_names=['label'], logger=logger,
                      update_freq=update_freq)
-    return train_iter, mod
+    return train_iter, val_iter, mod
 
 
 def create_metrics(metrics):
@@ -47,7 +48,7 @@ def create_logger():
     logger = logging.getLogger('sgd_svrg')
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(message)s')
-    fh = logging.FileHandler('experiments.log')
+    fh = logging.FileHandler('experiments_svrg.log')
     fh.setFormatter(formatter)
     logger.addHandler(fh)
     return logger
